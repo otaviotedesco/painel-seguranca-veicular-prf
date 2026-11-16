@@ -1,0 +1,93 @@
+[
+ {
+  "ano": 2019,
+  "0_pessoas": 162500,
+  "1_ocupantes": 155489,
+  "2_em_automovel": 68180,
+  "3_desfecho_conhecido": 64947,
+  "4_ano_fab_valido": 64183,
+  "5_modelo_identificado": 64128,
+  "5_automoveis": 41852,
+  "5_sinistros": 34130,
+  "6_obitos": 1556,
+  "6_obito_ou_grave": 7006
+ },
+ {
+  "ano": 2020,
+  "0_pessoas": 147757,
+  "1_ocupantes": 141451,
+  "2_em_automovel": 61863,
+  "3_desfecho_conhecido": 58193,
+  "4_ano_fab_valido": 57624,
+  "5_modelo_identificado": 57599,
+  "5_automoveis": 37384,
+  "5_sinistros": 30839,
+  "6_obitos": 1569,
+  "6_obito_ou_grave": 6447
+ },
+ {
+  "ano": 2021,
+  "0_pessoas": 150974,
+  "1_ocupantes": 144720,
+  "2_em_automovel": 62034,
+  "3_desfecho_conhecido": 58206,
+  "4_ano_fab_valido": 57657,
+  "5_modelo_identificado": 57626,
+  "5_automoveis": 38183,
+  "5_sinistros": 31538,
+  "6_obitos": 1533,
+  "6_obito_ou_grave": 6540
+ },
+ {
+  "ano": 2022,
+  "0_pessoas": 155386,
+  "1_ocupantes": 148744,
+  "2_em_automovel": 63232,
+  "3_desfecho_conhecido": 59321,
+  "4_ano_fab_valido": 58750,
+  "5_modelo_identificado": 58706,
+  "5_automoveis": 37919,
+  "5_sinistros": 31301,
+  "6_obitos": 1637,
+  "6_obito_ou_grave": 6635
+ },
+ {
+  "ano": 2023,
+  "0_pessoas": 166933,
+  "1_ocupantes": 160248,
+  "2_em_automovel": 66962,
+  "3_desfecho_conhecido": 62952,
+  "4_ano_fab_valido": 62344,
+  "5_modelo_identificado": 62266,
+  "5_automoveis": 39500,
+  "5_sinistros": 32632,
+  "6_obitos": 1662,
+  "6_obito_ou_grave": 6711
+ },
+ {
+  "ano": 2024,
+  "0_pessoas": 179114,
+  "1_ocupantes": 172537,
+  "2_em_automovel": 69788,
+  "3_desfecho_conhecido": 65375,
+  "4_ano_fab_valido": 64784,
+  "5_modelo_identificado": 64733,
+  "5_automoveis": 41241,
+  "5_sinistros": 34361,
+  "6_obitos": 1693,
+  "6_obito_ou_grave": 6849
+ },
+ {
+  "ano": 2025,
+  "0_pessoas": 177479,
+  "1_ocupantes": 171138,
+  "2_em_automovel": 67605,
+  "3_desfecho_conhecido": 63385,
+  "4_ano_fab_valido": 62763,
+  "5_modelo_identificado": 62681,
+  "5_automoveis": 40343,
+  "5_sinistros": 33758,
+  "6_obitos": 1624,
+  "6_obito_ou_grave": 6461
+ }
+]

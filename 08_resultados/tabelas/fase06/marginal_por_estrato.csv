@@ -1,0 +1,9 @@
+estrato;n;graves;obitos;pct_grave;pct_obito;ic95_inf;ic95_sup;comparavel
+auto x bicicleta;4057;25;3;0.62;0.07;0.42;0.91;True
+auto x leve;149368;14887;2784;9.97;1.86;9.82;10.12;True
+auto x moto;66715;452;55;0.68;0.08;0.62;0.74;True
+auto x multiplos;33761;3448;1018;10.21;3.02;9.89;10.54;True
+auto x onibus;4690;1159;452;24.71;9.64;23.5;25.97;True
+auto x outro;742;95;30;12.8;4.04;10.59;15.4;True
+auto x pesado;48259;11931;4422;24.72;9.16;24.34;25.11;True
+auto_sozinho;120147;14652;2510;12.2;2.09;12.01;12.38;True

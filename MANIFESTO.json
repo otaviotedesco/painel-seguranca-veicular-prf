@@ -1,0 +1,149 @@
+{
+ "gerado_por": "06_codigo/painel/p05_prepara_publicacao.py",
+ "arquivos": [
+  {
+   "arquivo": "06_codigo/painel/app/painel.py",
+   "bytes": 37201,
+   "sha256": "d1043f72fed246bc99b7e3ba20a47f4f9592d636dbe45a04cb3315cc48aaaad6",
+   "motivo": "aplicativo (ponto de entrada)"
+  },
+  {
+   "arquivo": "06_codigo/painel/app/estilo.py",
+   "bytes": 5779,
+   "sha256": "62ca016c888a1c27967d73c95b8646129aabf044268de8b7160c495b5b1f5aa1",
+   "motivo": "aplicativo: identidade visual"
+  },
+  {
+   "arquivo": "06_codigo/painel/app/inicio.py",
+   "bytes": 5444,
+   "sha256": "7f0394ae6654dadc05126832a4f84f813884be61e3309a40e0984cc8d7867452",
+   "motivo": "aplicativo: pagina inicial"
+  },
+  {
+   "arquivo": "06_codigo/painel/app/metodologia.py",
+   "bytes": 7180,
+   "sha256": "7cb164f2907f47832386b888a21127a09467d9dd4c36dae29e7324c7cc2d486d",
+   "motivo": "aplicativo: fontes e metodo"
+  },
+  {
+   "arquivo": "06_codigo/painel/app/analise_tcc.py",
+   "bytes": 16458,
+   "sha256": "163f3fe906888a8d88a49173affa893244adce3fcafde0843bcd8ae3a8b94691",
+   "motivo": "aplicativo: tela Analise do TCC"
+  },
+  {
+   "arquivo": "06_codigo/painel/app/perguntas.py",
+   "bytes": 34180,
+   "sha256": "acebc3cfe2a9c69354af66b2efb98eb1528cb886128aa9ed8d1fed467d4601b1",
+   "motivo": "aplicativo: tela Perguntas"
+  },
+  {
+   "arquivo": "06_codigo/painel/recorte_tcc.py",
+   "bytes": 1150,
+   "sha256": "76c096d241eb439f5cae695031a87754c5819ea2e187910132c80e2b9d3618ea",
+   "motivo": "definicao do filtro Recorte do TCC"
+  },
+  {
+   "arquivo": ".streamlit/config.toml",
+   "bytes": 336,
+   "sha256": "9638aeb99195b88c77c4cf67c86e803d1c2a8ea4e55e57d9c11a4c85e801d7d1",
+   "motivo": "tema do aplicativo"
+  },
+  {
+   "arquivo": "03_dados/09_painel/fato_sinistro.parquet",
+   "bytes": 58062197,
+   "sha256": "74161a77fbfe66c979f1c2b2d5f49b01cf93cff906912c6ad49bc25cf4db68fd",
+   "motivo": "dados do painel"
+  },
+  {
+   "arquivo": "03_dados/09_painel/fato_veiculo.parquet",
+   "bytes": 37427955,
+   "sha256": "bfe0ab539b715ac7e67116ffe421084239335d5beb6f1e024ccf1afcfae04d2d",
+   "motivo": "dados do painel"
+  },
+  {
+   "arquivo": "03_dados/09_painel/fato_pessoa.parquet",
+   "bytes": 34467506,
+   "sha256": "136ea100dfe2a2ea74c1a5af860554608cb71421986242058beec5d515ba938e",
+   "motivo": "dados do painel"
+  },
+  {
+   "arquivo": "03_dados/09_painel/fato_par_veiculo.parquet",
+   "bytes": 46684313,
+   "sha256": "20c0a743985212f1498fe202d216a81c327f8bfac8198a8560e2231a438f27f8",
+   "motivo": "dados do painel"
+  },
+  {
+   "arquivo": "03_dados/08_populacao/fluxograma_inclusao.json",
+   "bytes": 2025,
+   "sha256": "cf79eb907d9e52bd9b637876b9b33cc022b1e1016a78a2a63164c14d1ed8ff45",
+   "motivo": "contagens da populacao do TCC (pagina inicial e Analise do TCC)"
+  },
+  {
+   "arquivo": "08_resultados/tabelas/geracoes/GERACOES_v1_completa.csv",
+   "bytes": 43549,
+   "sha256": "e7c910c1d6410fd508e83670aaa81b4b053eda410498535027eaa543387dac90",
+   "motivo": "nomes das geracoes (Analise do TCC)"
+  },
+  {
+   "arquivo": "08_resultados/tabelas/geracoes/PLATAFORMAS_COMPARTILHADAS_v1.csv",
+   "bytes": 5239,
+   "sha256": "52393491b775c239017cb6ea6c32539fdabe46616f2d08c00ab79ab8760d2ff4",
+   "motivo": "plataformas compartilhadas (Analise do TCC)"
+  },
+  {
+   "arquivo": "08_resultados/tabelas/fase06/marginal_por_estrato.csv",
+   "bytes": 512,
+   "sha256": "3d2b196c56f936db950414ec4a84e29d7793ffb83f6642d2fba5fcbf920310bd",
+   "motivo": "resultados da analise (tela Analise do TCC)"
+  },
+  {
+   "arquivo": "08_resultados/tabelas/fase06/marginal_por_faixa_ano.csv",
+   "bytes": 332,
+   "sha256": "fc5c8fcab02c0b30f4c698fffbe1839520a89df1314889d07dc18724a5fed67f",
+   "motivo": "resultados da analise (tela Analise do TCC)"
+  },
+  {
+   "arquivo": "08_resultados/tabelas/fase06/marginal_por_papel.csv",
+   "bytes": 189,
+   "sha256": "67467f9b540bef53dbd9ac1e0eefa4ecead49384f2a3b4202a8d818027ee19f1",
+   "motivo": "resultados da analise (tela Analise do TCC)"
+  },
+  {
+   "arquivo": "08_resultados/tabelas/fase06/marginal_por_tipo_pista.csv",
+   "bytes": 226,
+   "sha256": "3a698d87e1303b5258a4c0573ecfa1d1da06e19651e2d4adad302b9623d3743e",
+   "motivo": "resultados da analise (tela Analise do TCC)"
+  },
+  {
+   "arquivo": "08_resultados/tabelas/fase06/marginal_por_uso_solo.csv",
+   "bytes": 173,
+   "sha256": "f69c54140c2427189c096c996baf3f45566240b58ee41bd687b8ec6608c72008",
+   "motivo": "resultados da analise (tela Analise do TCC)"
+  },
+  {
+   "arquivo": "08_resultados/tabelas/fase06/gravidade_por_uf.csv",
+   "bytes": 2003,
+   "sha256": "6defc35ef16a38d8088fdf7f734c17da8d32ff9629543b26d4a7f088a22ac691",
+   "motivo": "resultados da analise (tela Analise do TCC)"
+  },
+  {
+   "arquivo": "08_resultados/tabelas/fase06/celulas_unidade_faixa_estrato.csv",
+   "bytes": 324253,
+   "sha256": "57481ecbccc26b133de59ad70a6dfbb544a0947421cf158365b871f9544b6990",
+   "motivo": "resultados da analise (tela Analise do TCC)"
+  },
+  {
+   "arquivo": "08_resultados/tabelas/fase06/logistica_leitura.csv",
+   "bytes": 6245,
+   "sha256": "95b4034f8b9b721849dc120a4a780460e0776bfbbdb648eb42ece608de8decae",
+   "motivo": "resultados da analise (tela Analise do TCC)"
+  },
+  {
+   "arquivo": "08_resultados/tabelas/fase06/sensibilidade_leitura.csv",
+   "bytes": 2047,
+   "sha256": "a9d419f7610127f0f81a6cae323a8f0d495ab70868e353a77236e15a8ccb60f1",
+   "motivo": "resultados da analise (tela Analise do TCC)"
+  }
+ ]
+}

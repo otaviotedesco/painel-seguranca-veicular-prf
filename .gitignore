@@ -1,0 +1,11 @@
+# so entram os arquivos listados no MANIFESTO.json (DP-54)
+.env
+.env.*
+*.pdf
+*.doc*
+*.odt
+*.xls*
+*.ppt*
+*.duckdb
+__pycache__/
+.DS_Store
