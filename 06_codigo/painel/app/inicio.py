@@ -1,6 +1,3 @@
-"""Pagina inicial do painel (DP-52). Apresenta o trabalho e conduz a exploracao.
-Todo numero desta pagina e lido do banco do painel ou do fluxograma do TCC no momento da exibicao; nenhum e
-digitado. Os textos repetem o que o documento do TCC ja afirma (titulo, objetivo, delimitacao)."""
 import json, pathlib, streamlit as st
 import estilo
 

@@ -1,23 +1,5 @@
-"""Tela "Perguntas" do painel: respostas prontas às perguntas 1 a 10 de
-00_gestao/painel/PERGUNTAS_PAINEL.md (DP-46).
-
-Modulo separado de proposito: as telas Panorama e Consulta livre (painel.py) nao sao
-alteradas. O painel.py apenas acrescenta "Perguntas" a lista de telas e chama
-tela_perguntas(consultar), reaproveitando a mesma conexao e o mesmo cache.
-
-Criterios comuns (declarados na propria tela):
-  - "com vitimas" = classificacao oficial da PRF com feridos ou com mortos. Toda
-    proporcao de mortes usa essa base: a saida dos sinistros sem vitimas do registro
-    (2015 e 2018) mudaria qualquer proporcao calculada sobre o total.
-  - perguntas de colisao (1 e 2): por padrao, so sinistros com exatamente dois
-    veiculos — com dois, o par E a colisao; com tres ou mais, o par diz apenas que os
-    dois estavam no mesmo sinistro.
-  - obito no veiculo: so entre veiculos com desfecho registrado; os demais aparecem
-    como categoria, fora do percentual.
-Nenhum dado e alterado aqui: so consultas sobre a camada consolidada.
-"""
 import pandas as pd, streamlit as st, plotly.express as px, plotly.graph_objects as go
-import estilo                                  # DP-52: so aparencia
+import estilo
 
 CV = "classificacao_acidente IN ('Com Vítimas Feridas', 'Com Vítimas Fatais')"
 FT = "(classificacao_acidente = 'Com Vítimas Fatais')"
@@ -35,12 +17,10 @@ COR_DESFECHO = {"Ileso": "#9ecae1", "Lesões leves": "#fdd49e", "Lesões graves"
 
 
 def n(v):
-    """inteiro no formato brasileiro"""
     return f"{int(round(v)):,}".replace(",", ".")
 
 
 def p(v, casas=1):
-    """percentual no formato brasileiro"""
     return f"{v:.{casas}f}".replace(".", ",") + "%"
 
 
@@ -80,7 +60,6 @@ def filtro_dois_veiculos(chave):
            ("sinistros com exatamente 2 veículos" if so2 else "todos os sinistros com 2+ veículos")
 
 
-# ------------------------------------------------------------------ 1
 def q1(consultar):
     titulo(1, "Quando um veículo leve colide com um pesado, onde fica o óbito?")
     cond, rot = filtro_dois_veiculos("q1_todos")
@@ -126,7 +105,6 @@ def q1(consultar):
             "camioneta e utilitário; 'pesado', caminhão, caminhão-trator e chassi-plataforma.")
 
 
-# ------------------------------------------------------------------ 2
 def q2(consultar):
     titulo(2, "Em qual combinação de veículos a proporção de óbito no veículo é maior?")
     cond, rot = filtro_dois_veiculos("q2_todos")
@@ -170,7 +148,6 @@ def q2(consultar):
             "Mostra envolvimento e desfecho, não risco por quilômetro rodado.")
 
 
-# ------------------------------------------------------------------ 3
 def q3(consultar):
     d = consultar("""
         SELECT v.tipo_veiculo AS tipo, p.desfecho, count(*) AS pessoas
@@ -220,7 +197,6 @@ def q3(consultar):
             "e a base não tem dado de exposição.")
 
 
-# ------------------------------------------------------------------ 4
 def q4(consultar):
     titulo(4, "Quais causas apresentam a maior proporção de sinistros com vítimas fatais?")
     nivel = st.radio("Nível da causa", ["Grupo (19)", "Detalhada"], horizontal=True, key="q4_nivel")
@@ -256,7 +232,6 @@ def q4(consultar):
             "Janela a partir de 2017: antes disso, 28% dos sinistros têm causa 'Não especificada'.")
 
 
-# ------------------------------------------------------------------ 5
 def q5(consultar):
     d = consultar(f"""
         SELECT fase_dia, count(*) AS com_vitimas, count_if({FT}) AS fatais,
@@ -304,7 +279,6 @@ def q5(consultar):
             "fatores que mudam à noite, como velocidade, álcool, sono e tipo de tráfego.")
 
 
-# ------------------------------------------------------------------ 6
 def q6(consultar):
     d = consultar(f"""
         SELECT hour(horario) AS hora, dia_semana AS dia, count(*) AS com_vitimas,
@@ -339,7 +313,6 @@ def q6(consultar):
             "proporção de cada célula se apoia em menos casos; passe o mouse para ver o número.")
 
 
-# ------------------------------------------------------------------ 7
 def q7(consultar):
     d = consultar(f"""
         SELECT tipo_pista,
@@ -385,7 +358,6 @@ def q7(consultar):
             "região.")
 
 
-# ------------------------------------------------------------------ 8
 def q8(consultar):
     titulo(8, "Quais trechos de 5 km aparecem entre os mais graves ano após ano?")
     c1, c2 = st.columns(2)
@@ -432,7 +404,6 @@ def q8(consultar):
             "a quilometragem da PRF recomeça em cada estado.")
 
 
-# ------------------------------------------------------------------ 9
 def q9(consultar):
     d = consultar(f"""
         SELECT br, count(*) AS com_vitimas, sum(n_mortos) AS mortos,
@@ -475,7 +446,6 @@ def q9(consultar):
             "sinistro acontece, não a chance de ele acontecer.")
 
 
-# ------------------------------------------------------------------ 10
 def q10(consultar):
     causas = ["Álcool", "Sono", "Velocidade"]
     lista = ", ".join(f"'{c}'" for c in causas)

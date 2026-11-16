@@ -7,6 +7,8 @@ Tedesco, com orientação do Prof. Me. Marcos Corino.
 O painel apresenta a análise do trabalho e permite explorar os dados de sinistros registrados pela Polícia
 Rodoviária Federal (PRF) nas rodovias federais brasileiras.
 
+**Acesse o painel:** https://painel-seguranca-veicular-prf.streamlit.app/
+
 ## Fonte dos dados
 [Dados abertos da Polícia Rodoviária Federal](https://www.gov.br/prf/pt-br/acesso-a-informacao/dados-abertos/dados-abertos-da-prf).
 Os arquivos de `03_dados/09_painel/` são uma camada derivada desses dados, com rótulos harmonizados entre os sistemas

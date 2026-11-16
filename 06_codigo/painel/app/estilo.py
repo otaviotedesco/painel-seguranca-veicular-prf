@@ -1,19 +1,11 @@
-"""Identidade visual do painel (DP-52). So aparencia: nenhum dado, calculo ou filtro e definido aqui.
-
-- Paleta de interface sobria (azul-marinho, cinzas) e paleta categorica dos graficos validada para
-  daltonismo (skill dataviz, paleta de referencia: ordem fixa, ΔE CVD adjacente >= 9,1).
-- Template Plotly "tcc" aplicado como padrao a todos os graficos; cores com significado proprio
-  (desfecho, IC) continuam definidas onde ja estavam.
-- Componentes: cabecalho de pagina, titulo de secao com descricao, cards de indicador.
-"""
 import streamlit as st, plotly.graph_objects as go, plotly.io as pio
 
-AZUL = "#1F3A5F"          # cor institucional: titulos, navegacao, botao principal
+AZUL = "#1F3A5F"
 AZUL_CLARO = "#E8EEF5"
 TINTA = "#1F2933"; TINTA_2 = "#52606D"; TINTA_3 = "#7B8794"
 BORDA = "#E4E7EB"; FUNDO_2 = "#F5F7FA"
 SERIE = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300", "#6250d6", "#e34948"]
-COR_PRINCIPAL = SERIE[0]  # graficos de uma serie so
+COR_PRINCIPAL = SERIE[0]
 
 pio.templates["tcc"] = go.layout.Template(layout=dict(
     font=dict(family="Source Sans Pro, Segoe UI, system-ui, sans-serif", size=13, color=TINTA),

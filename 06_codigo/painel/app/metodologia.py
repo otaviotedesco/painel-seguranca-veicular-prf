@@ -1,5 +1,3 @@
-"""Pagina "Fontes e metodo" (DP-52): fontes, periodos, definicoes, mudancas de registro e limites.
-Reune o que o documento do TCC e as decisoes metodologicas ja estabelecem; contagens lidas dos arquivos."""
 import json, pathlib, pandas as pd, streamlit as st
 import estilo
 
@@ -89,5 +87,5 @@ def tela_metodologia(quebras):
     estilo.secao("Reprodutibilidade")
     st.markdown("Todo o tratamento é feito por scripts versionados, executados em sequência por um orquestrador, a "
                 "partir dos arquivos originais. Cada decisão metodológica está registrada com justificativa, regra e "
-                "impacto. Testes automáticos conferem a integridade da camada do painel e a igualdade entre o recorte "
+                "impacto. Testes automáticos conferem a integridade dos dados do painel e a igualdade entre o recorte "
                 "do TCC no painel e a população da análise.")

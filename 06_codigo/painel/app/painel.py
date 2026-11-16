@@ -1,15 +1,3 @@
-"""Painel exploratorio de sinistros em rodovias federais — prototipo P-06.
-
-Stack: Streamlit + Plotly sobre 03_dados/09_painel/painel.duckdb (DP-04, DP-06).
-Telas: Panorama (DP-17) e Consulta livre (DM-056, DP-14, DP-15).
-
-Executar:  pip install streamlit plotly duckdb
-           streamlit run 06_codigo/painel/app/painel.py
-
-TRILHA DO PAINEL (DM-054, DM-058): a tela "Analise do TCC" exibe os numeros da trilha
-analitica, sem recalcular; numeros da Consulta livre nao vao para o texto do TCC.
-Regime de ausencia da Consulta livre: inclusivo, nunca imputado (DM-055).
-"""
 import pathlib
 import duckdb, pandas as pd, streamlit as st, plotly.express as px
 import sys
@@ -24,7 +12,7 @@ QUEBRAS = {2015: "e-DAT: sinistros sem vítimas passam a poder ser declarados pe
 st.set_page_config(page_title="Segurança veicular nas rodovias federais — painel do TCC", layout="wide",
                    initial_sidebar_state="expanded")
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
-import estilo                      # DP-52: identidade visual (so aparencia)
+import estilo
 estilo.aplicar()
 
 TABELAS = ["fato_sinistro", "fato_veiculo", "fato_pessoa", "fato_par_veiculo"]
@@ -34,10 +22,6 @@ def fonte_disponivel():
     return BANCO.exists() or all((PARQUET / f"{t}.parquet").exists() for t in TABELAS)
 
 def caminho_banco():
-    """DP-54 (publicacao): o repositorio publico leva so os Parquet gerados pelo p04 (cada um abaixo do limite
-    de 100 MB do GitHub). Sem o painel.duckdb, o banco e montado uma vez, a partir deles, numa pasta temporaria.
-    Os Parquet sao copia exata das tabelas do banco (mesmo p04), entao as consultas nao mudam. Localmente, com o
-    painel.duckdb presente, nada muda."""
     if BANCO.exists():
         return BANCO
     import tempfile, os
@@ -61,7 +45,6 @@ def conectar():
 def consultar(sql: str) -> pd.DataFrame:
     return conectar().execute(sql).fetch_df()
 
-# ---------------------------------------------------------------- base por visao
 BASES = {
     "Sinistros": "fato_sinistro s",
     "Veiculos":  "fato_veiculo v JOIN fato_sinistro s USING (ano_sinistro, id)",
@@ -87,7 +70,6 @@ MEDIDAS = {
                  "sum(CASE WHEN r.severidade_veiculo='obito' THEN 1 ELSE 0 END) AS obito_no_veiculo, "
                  "sum(CASE WHEN r.severidade_veiculo_cp='obito' THEN 1 ELSE 0 END) AS obito_na_contraparte",
 }
-# medida principal de cada visao, usada na serie por ano e no teto do eixo
 PRINCIPAL = {"Sinistros": "count(DISTINCT (s.ano_sinistro || '-' || s.id))",
              "Veiculos":  "count(DISTINCT (v.ano_sinistro || '-' || v.id_veiculo))",
              "Pessoas":   "count(DISTINCT (p.ano_sinistro || '-' || p.pesid))",
@@ -95,8 +77,6 @@ PRINCIPAL = {"Sinistros": "count(DISTINCT (s.ano_sinistro || '-' || s.id))",
 NOME_PRINCIPAL = {"Sinistros": "sinistros", "Veiculos": "veiculos",
                   "Pessoas": "pessoas", "Pares": "pares"}
 
-# dimensoes pelas quais a serie anual pode ser decomposta (uma cor por valor).
-# rotulo -> (expressao SQL, visoes em que faz sentido)
 DIMENSOES = {
     "Nenhuma (serie total)":   (None, None),
     "Unidade federativa":      ("s.uf", None),
@@ -115,7 +95,7 @@ DIMENSOES = {
     "Faixa de ano de fabric.": ("v.faixa_ano_fab", {"Veiculos", "Pessoas"}),
     "Fabricante":              ("v.fabricante", {"Veiculos"}),
     "Familia de modelo":       ("v.familia", {"Veiculos"}),
-    "Geracao do modelo":       ("v.geracao_rotulo", {"Veiculos", "Pessoas"}),     # QP-23, DM-063
+    "Geracao do modelo":       ("v.geracao_rotulo", {"Veiculos", "Pessoas"}),
     "Papel da pessoa":         ("p.papel", {"Pessoas"}),
     "Sexo":                    ("p.sexo_norm", {"Pessoas"}),
     "Faixa etaria":            ("p.faixa_etaria", {"Pessoas"}),
@@ -123,12 +103,11 @@ DIMENSOES = {
     "Tipo de contraparte":     ("r.contraparte_tipo", {"Pares"}),
     "Modelo consultado":       ("r.familia", {"Pares"}),
     "Modelo da contraparte":   ("r.familia_cp", {"Pares"}),
-    "Geracao do modelo consultado": ("r.geracao_rotulo", {"Pares"}),             # QP-23
+    "Geracao do modelo consultado": ("r.geracao_rotulo", {"Pares"}),
     "Geracao da contraparte":  ("r.geracao_rotulo_cp", {"Pares"}),
 }
 GRAFICOS = ["Barras empilhadas", "Linhas", "Area 100% (composicao)", "Mapa de calor"]
 
-# DP-28 — rotulos legiveis: o painel e para qualquer leitor, nao so para quem leu o dicionario
 NOMES = {
     "condutor_conduta":  "Conduta do condutor",
     "condutor_estado":   "Estado do condutor (alcool, sono)",
@@ -165,7 +144,6 @@ legivel = lambda v: NOMES.get(str(v), str(v))
 
 lit = lambda vs: ", ".join("'" + str(v).replace("'", "''") + "'" for v in vs)
 
-# ---------------------------------------------------------------- filtros
 def montar_filtros(visao):
     f = {}
     st.sidebar.header("Filtros")
@@ -178,7 +156,7 @@ def montar_filtros(visao):
     if sel := st.sidebar.multiselect("UF", ufs):
         f["UF"] = f"s.uf IN ({lit(sel)})"
     st.sidebar.subheader("Sinistro")
-    caixa = st.sidebar.expander("Condições, tipo e causa", expanded=False)   # DP-52: so agrupamento visual
+    caixa = st.sidebar.expander("Condições, tipo e causa", expanded=False)
     for rotulo, col in [("Fase do dia", "fase_dia"), ("Condicao meteorologica", "condicao_metereologica"),
                         ("Tipo de pista", "tipo_pista"), ("Classificacao", "classificacao_acidente"),
                         ("Tipo de acidente", "tipo_detalhado"),
@@ -193,15 +171,13 @@ def montar_filtros(visao):
     if visao in ("Veiculos", "Pessoas", "Pares"):
         pref = "r" if visao == "Pares" else "v"
         st.sidebar.subheader("Veiculo")
-        busca = st.sidebar.text_input("Buscar modelo", placeholder="ex.: GOL, ONIX, NIVUS")   # DP-14
+        busca = st.sidebar.text_input("Buscar modelo", placeholder="ex.: GOL, ONIX, NIVUS")
         fab = consultar("""SELECT fabricante AS x FROM fato_veiculo
                            GROUP BY 1 ORDER BY count(*) DESC""").x.tolist()
         selfab = st.sidebar.multiselect("Fabricante", fab)
         cond = ["1=1"]
         if busca: cond.append(f"familia ILIKE '%{busca.replace(chr(39), '')}%'")
         if selfab: cond.append(f"fabricante IN ({lit(selfab)})")
-        # a familia sozinha nao identifica o modelo: "125" existe em mais de um
-        # fabricante. A selecao e sempre pelo par fabricante + familia (DP-45).
         fams = consultar(f"""SELECT fabricante AS fb, familia AS x, count(*) AS n FROM fato_veiculo
                              WHERE {' AND '.join(cond)} GROUP BY 1,2 ORDER BY n DESC LIMIT 300""")
         rot = {f"{r.x} — {r.fb}  ({r.n:,})".replace(",", "."): f"{r.fb}|{r.x}"
@@ -211,9 +187,6 @@ def montar_filtros(visao):
                            f"IN ({lit([rot[s] for s in sel])})")
         elif selfab:
             f["Fabricante"] = f"{pref}.fabricante IN ({lit(selfab)})"
-        # QP-23 (DM-063, DM-066): geracao pela mesma regra da analise do TCC, so nas 63 familias da tabela
-        # de geracoes; os demais veiculos ficam como "Geracao nao identificada". Opcoes restritas aos
-        # modelos escolhidos, quando houver.
         cg = [f"geracao_via <> 'fora_catalogo'"]
         if "Modelo" in f:
             cg.append(f"(fabricante || '|' || familia) IN ({lit([rot[s] for s in sel])})")
@@ -249,8 +222,6 @@ def montar_filtros(visao):
 
     if visao == "Pessoas":
         st.sidebar.subheader("Recorte do TCC")
-        # DM-058: reproduz exatamente a populacao do TCC; definicao unica em recorte_tcc.py,
-        # conferida pelo teste do p04
         if st.sidebar.checkbox("Recorte do TCC", key="recorte_tcc",
                                help="Ocupantes de automovel, 2019-2025, desfecho conhecido, ano de "
                                     "fabricacao valido e modelo identificado — a populacao da analise do TCC"):
@@ -268,7 +239,6 @@ def onde(f, excluir=None):
     cs = [v for k, v in f.items() if k != excluir]
     return " WHERE " + " AND ".join(cs) if cs else ""
 
-# ---------------------------------------------------------------- avisos
 def avisos(f, visao, a0=2008, a1=2025):
     av = []
     if a0 <= 2015 <= a1 or a0 <= 2018 <= a1:
@@ -276,7 +246,7 @@ def avisos(f, visao, a0=2008, a1=2025):
                   "(e-DAT e mudanca de procedimento), nao reducao de sinistros. Series de mortos sao comparaveis; totais de sinistros nao.")
     if "Causa (categoria)" in f and a0 <= 2016:
         av.append("O vocabulario de causa mudou em 2017 e 2021. Ate 2016, **28% dos sinistros tinham causa 'Outras'**. "
-                  "O nivel detalhado ja unifica as tres geracoes de vocabulario (DP-32); o rotulo original fica preservado nos dados.")
+                  "O nivel detalhado ja unifica as tres geracoes de vocabulario; o rotulo original fica preservado nos dados.")
     if visao in ("Veiculos", "Pares") and a0 <= 2016 <= a1:
         av.append("A identificacao do modelo passa de ~85% para ~94% entre 2016 e 2017. "
                   "Parte de qualquer aumento aparente e melhora de preenchimento, nao mais sinistros.")
@@ -293,7 +263,6 @@ def avisos(f, visao, a0=2008, a1=2025):
                   "uma pessoa foi registrada em duas linhas.")
     return av
 
-# ---------------------------------------------------------------- telas
 def marcar_quebras(fig):
     for ano in QUEBRAS:
         fig.add_vline(x=ano, line_dash="dot", line_color="#b00",
@@ -411,7 +380,7 @@ def tela_consulta():
     if int(res[primeira].fillna(0).iloc[0]) == 0:
         st.error("**0 resultados** para este recorte.")
         if f:
-            st.write("Removendo um filtro de cada vez:")                        # DP-15
+            st.write("Removendo um filtro de cada vez:")
             for nome in list(f):
                 n = consultar(f"SELECT {MEDIDAS[visao]} FROM {base}{onde(f, excluir=nome)}")
                 n0 = int(n[primeira].fillna(0).iloc[0])
@@ -428,12 +397,9 @@ def tela_consulta():
     cols = st.columns(len(res.columns))
     for i, c in enumerate(res.columns):
         v = res[c].iloc[0]
-        # somas condicionais voltam do banco como decimal (16.0); inteiro se exibe como inteiro
         num = int(v) if pd.notna(v) and float(v).is_integer() else v
         cols[i].metric(c.replace("_", " "), f"{num:,}".replace(",", ".") if pd.notna(v) else "-")
 
-    # QP-20: tamanho do recorte em relacao ao total da mesma visao no mesmo periodo, para que um recorte
-    # pequeno, desenhado com o eixo ajustado, nao pareca grande. Nao altera nenhum calculo.
     filtros_alem_periodo = [k for k in f if k != "Periodo"]
     if filtros_alem_periodo:
         tot_p = consultar(f"SELECT {PRINCIPAL[visao]} AS n FROM {base}"
@@ -446,7 +412,6 @@ def tela_consulta():
                        f"do período".replace(".", ",", 1)
                        + f" ({int(n_rec):,} de {int(tot_p):,}).".replace(",", "."))
 
-    # --- serie anual, decomponivel por qualquer dimensao (DP-27) ---
     estilo.secao("Evolução por ano", "Escolha uma dimensão para ver a composição por cor e o tipo de gráfico.")
     expr, col_nome = PRINCIPAL[visao], NOME_PRINCIPAL[visao]
     disp = [k for k, (e, vs) in DIMENSOES.items() if vs is None or visao in vs]
@@ -466,10 +431,9 @@ def tela_consulta():
                                      {expr} AS {col_nome}
                               FROM {base}{onde(f)} GROUP BY 1,2 ORDER BY 1,2""")
         serie["categoria"] = serie.categoria.replace("", "Nao informado").fillna("Nao informado")
-        serie["categoria"] = serie.categoria.map(legivel)                       # DP-28
+        serie["categoria"] = serie.categoria.map(legivel)
         soma = serie.groupby("categoria")[col_nome].sum().sort_values(ascending=False)
         n_cat = len(soma)
-        # DP-29 — o autor decide quantas categorias ver; nada e agrupado sem que ele peca
         if n_cat > 12:
             lim = c3.slider("Categorias no grafico", 5, min(n_cat, 60),
                             min(n_cat, 15), key="lim_cat",
@@ -515,7 +479,6 @@ def tela_consulta():
                 **({"markers": True} if tipo == "Linhas" else {}))
         if not tipo.startswith("Mapa"):
             fig.update_yaxes(rangemode="tozero")
-        # altura cresce com o numero de categorias, para caber a legenda (DP-29)
         n_leg = serie.categoria.nunique() if dim_sql else 1
         fig.update_layout(height=max(430, min(430 + 22 * max(0, n_leg - 8), 1100)),
                           legend_title_text=dim_rot if dim_sql else None)
@@ -524,7 +487,6 @@ def tela_consulta():
                 fig.add_vline(x=ano, line_dash="dot", line_color="#b00", opacity=.45)
         st.plotly_chart(fig, width="stretch")
 
-        # --- legenda gerada dos proprios dados ---
         fmt = lambda n: f"{int(n):,}".replace(",", ".")
         tot = int(serie[col_nome].sum())
         a0, a1 = int(serie.ano.min()), int(serie.ano.max())
@@ -573,14 +535,13 @@ def tela_consulta():
     for a in av:
         st.warning(a)
 
-# DP-52: navegacao. As chaves das paginas (usadas pelos testes) nao mudam; so o rotulo exibido.
 PAGINAS = {"Inicio": "Início", "Analise do TCC": "Análise do TCC", "Panorama": "Panorama",
            "Consulta livre": "Consulta livre", "Perguntas": "Perguntas", "Fontes e metodo": "Fontes e método"}
 estilo.marca_lateral()
 pagina = st.sidebar.radio("Navegação", list(PAGINAS), format_func=PAGINAS.get, key="pagina")
 st.sidebar.divider()
 if not fonte_disponivel():
-    st.error(f"Banco nao encontrado em {BANCO}. Rode antes: python 06_codigo/painel/p04_bloco_d.py")
+    st.error("Os dados do painel não estão disponíveis.")
 elif pagina == "Inicio":
     from inicio import tela_inicio
     tela_inicio(consultar)
@@ -589,10 +550,10 @@ elif pagina == "Fontes e metodo":
     tela_metodologia(QUEBRAS)
 elif pagina == "Panorama":
     tela_panorama()
-elif pagina == "Analise do TCC":     # DM-058: so exibe resultados da trilha analitica
+elif pagina == "Analise do TCC":
     from analise_tcc import tela_analise_tcc
     tela_analise_tcc()
-elif pagina == "Perguntas":          # DP-46: tela em modulo proprio; as outras nao mudam
+elif pagina == "Perguntas":
     from perguntas import tela_perguntas
     tela_perguntas(consultar)
 else:

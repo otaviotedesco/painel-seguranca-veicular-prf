@@ -3,44 +3,44 @@
  "arquivos": [
   {
    "arquivo": "06_codigo/painel/app/painel.py",
-   "bytes": 37201,
-   "sha256": "d1043f72fed246bc99b7e3ba20a47f4f9592d636dbe45a04cb3315cc48aaaad6",
+   "bytes": 34037,
+   "sha256": "fcb78d8348ec042d5a65ad15e14134bf499d3cb2090f29b38c19bd2d16888596",
    "motivo": "aplicativo (ponto de entrada)"
   },
   {
    "arquivo": "06_codigo/painel/app/estilo.py",
-   "bytes": 5779,
-   "sha256": "62ca016c888a1c27967d73c95b8646129aabf044268de8b7160c495b5b1f5aa1",
+   "bytes": 5152,
+   "sha256": "647352f23ef28d834e5a0bd3c53ae17a8ed292e04dcfb0c684b80feddfc95d56",
    "motivo": "aplicativo: identidade visual"
   },
   {
    "arquivo": "06_codigo/painel/app/inicio.py",
-   "bytes": 5444,
-   "sha256": "7f0394ae6654dadc05126832a4f84f813884be61e3309a40e0984cc8d7867452",
+   "bytes": 5156,
+   "sha256": "60d32967db0b005d8123d162453c94d780bb8427f53333308bbbace8d3f9de47",
    "motivo": "aplicativo: pagina inicial"
   },
   {
    "arquivo": "06_codigo/painel/app/metodologia.py",
-   "bytes": 7180,
-   "sha256": "7cb164f2907f47832386b888a21127a09467d9dd4c36dae29e7324c7cc2d486d",
+   "bytes": 6973,
+   "sha256": "2ccaa5a176dd9d44c9fc04f5e4fef2c503f9bb42decd7a93471e22b9eb9ae607",
    "motivo": "aplicativo: fontes e metodo"
   },
   {
    "arquivo": "06_codigo/painel/app/analise_tcc.py",
-   "bytes": 16458,
-   "sha256": "163f3fe906888a8d88a49173affa893244adce3fcafde0843bcd8ae3a8b94691",
+   "bytes": 14791,
+   "sha256": "4a4487d3bb861c30f25e841342122482f7246b1d0adff7b241cc59bc7a4db498",
    "motivo": "aplicativo: tela Analise do TCC"
   },
   {
    "arquivo": "06_codigo/painel/app/perguntas.py",
-   "bytes": 34180,
-   "sha256": "acebc3cfe2a9c69354af66b2efb98eb1528cb886128aa9ed8d1fed467d4601b1",
+   "bytes": 32288,
+   "sha256": "05095c7e3a813096644bf40103301f83342c6622b349df1cc2009dc31860d7df",
    "motivo": "aplicativo: tela Perguntas"
   },
   {
    "arquivo": "06_codigo/painel/recorte_tcc.py",
-   "bytes": 1150,
-   "sha256": "76c096d241eb439f5cae695031a87754c5819ea2e187910132c80e2b9d3618ea",
+   "bytes": 349,
+   "sha256": "a1b87f2a70ab0fae1626585e05a17d8fada22319d51585c33a2bb64dffcf18f2",
    "motivo": "definicao do filtro Recorte do TCC"
   },
   {

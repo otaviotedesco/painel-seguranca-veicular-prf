@@ -1,23 +1,13 @@
-"""Tela "Análise do TCC" (DM-058): exibe os resultados da trilha analítica do TCC.
-
-Esta tela NÃO calcula nada: lê as tabelas que os scripts da Fase 06 gravaram em
-08_resultados/tabelas/fase06/ e o fluxograma de 03_dados/08_populacao/. Assim os
-números da tela são, por construção, os números do texto do TCC.
-O painel.py só acrescenta a tela à lista e chama tela_analise_tcc().
-Q-79 (2026-11-08): a comparação passa a ser por modelo + geração (DM-063 a DM-067), a referência da verificação
-é o Gol G5–G8 (GOL_PQ24, DM-068) e o contexto da via (tipo de pista, uso do solo, UF) entra como controle (DM-062).
-Versão anterior em 06_codigo/analise/_historico/2026-11-08_antes_Q79/.
-"""
 import json, pathlib
 import numpy as np
 import pandas as pd, streamlit as st, plotly.express as px, plotly.graph_objects as go
-import estilo                                  # DP-52: so aparencia
+import estilo
 
 R = pathlib.Path(__file__).resolve().parents[3]
 TAB = R / "08_resultados" / "tabelas" / "fase06"
 FLUXO = R / "03_dados" / "08_populacao" / "fluxograma_inclusao.json"
 GER = R / "08_resultados" / "tabelas" / "geracoes" / "GERACOES_v1_completa.csv"
-PLAT = R / "08_resultados" / "tabelas" / "geracoes" / "PLATAFORMAS_COMPARTILHADAS_v1.csv"   # Q-81, DM-069
+PLAT = R / "08_resultados" / "tabelas" / "geracoes" / "PLATAFORMAS_COMPARTILHADAS_v1.csv"
 MARCA = ("_TRANSICAO", "_CONFLITO", "_SEM_GERACAO")
 
 ESTRATO = {"auto_sozinho": "Automóvel sozinho", "auto x leve": "× veículo leve", "auto x moto": "× moto",
@@ -38,7 +28,6 @@ def ler(nome):
 
 @st.cache_data(show_spinner=False)
 def nomes_geracao():
-    """unidade (familia + geracao) -> rótulo legível, da tabela de gerações validada pelo autor (DM-064, DM-066)"""
     g = pd.read_csv(GER, sep=";", dtype=str, keep_default_na=False)
     return {k: f"{f} · {nm}" for k, f, nm in zip(g.geracao_id, g.familia, g.nome)}
 
@@ -57,7 +46,6 @@ def grafico(fig, altura=420):
 
 
 def barras_ic(d, rotulo, ordem=None, altura=380):
-    """barras horizontais da proporção de óbito ou lesão grave, com IC95% de Wilson"""
     d = d.copy()
     d["rot"] = d[rotulo]
     fig = go.Figure(go.Bar(
@@ -83,14 +71,13 @@ def tela_analise_tcc():
                "nada aqui indica que um modelo se envolve mais em sinistros ou que seja intrinsecamente mais seguro. "
                "Diferenças são associações, não causas.", icon="⚠️")
     if not TAB.exists() or not FLUXO.exists():
-        st.error("Resultados do TCC não encontrados. Rode a trilha analítica (Fases 03 a 06) antes.")
+        st.error("Os resultados da análise não estão disponíveis.")
         return
-    st.caption(f"Fonte: trilha analítica do TCC (`08_resultados/tabelas/fase06/`). Esta tela não recalcula nada (DM-058). "
-               f"A Consulta livre, com o filtro \"Recorte do TCC\" ligado, reproduz exatamente esta população.")
+    st.caption("Os números desta tela são os resultados apresentados no texto do TCC. "
+               "Na Consulta livre, o filtro \"Recorte do TCC\" reproduz exatamente esta população.")
 
     abas = st.tabs(["População", "Fatores além do modelo", "Por UF", "Entre modelos", "Verificação"])
 
-    # ------------------------------------------------------------- população
     with abas[0]:
         fl = json.load(open(FLUXO, encoding="utf-8"))
         tot = {k: sum(x[k] for x in fl) for k in fl[0] if k != "ano"}
@@ -109,7 +96,6 @@ def tela_analise_tcc():
                      hide_index=True, width="stretch")
         st.caption("Os registros retirados continuam na base e na Consulta livre; só não entram na comparação.")
 
-    # ------------------------------------------------------------- três efeitos
     with abas[1]:
         st.markdown("Antes de comparar modelos: o tipo de colisão, a idade do veículo, o papel do ocupante e o tipo de via "
                     "mudam a gravidade mais do que o modelo do carro. Por isso toda comparação entre modelos é feita **dentro** "
@@ -129,10 +115,9 @@ def tela_analise_tcc():
         us = ler("marginal_por_uso_solo.csv"); us["Trecho"] = us.uso_solo.map({"rural": "Rural", "urbano": "Urbano"}).fillna(us.uso_solo)
         barras_ic(us, "Trecho", altura=200)
         st.caption("Tipo de pista e trecho urbano ou rural são características do local do sinistro, usadas como contexto, "
-                   "não como causa (DM-010, DM-062).")
+                   "não como causa.")
         st.caption("IC95% de Wilson; não corrige a dependência entre ocupantes do mesmo sinistro (a verificação corrige).")
 
-    # ------------------------------------------------------------- UF
     with abas[2]:
         u = ler("gravidade_por_uf.csv")
         medida = st.radio("Medida", ["Observada", "Padronizada pelo tipo de colisão"], horizontal=True, key="tcc_uf")
@@ -148,9 +133,8 @@ def tela_analise_tcc():
                 "veículos: a diferença entre estados não se explica pelo tipo de colisão, e cerca de 30% dela acompanha o tipo "
                 "de pista e o trecho urbano ou rural. Velocidade, tempo de atendimento e prática de registro são explicações "
                 "possíveis que os dados não medem. Por isso tipo de pista, trecho e UF entram juntos como controle na "
-                "verificação entre modelos (DM-062).", icon="ℹ️")
+                "verificação entre modelos.", icon="ℹ️")
 
-    # ------------------------------------------------------------- entre modelos
     with abas[3]:
         cel = ler("celulas_unidade_faixa_estrato.csv"); cel["Modelo"] = cel.unidade.map(rotulo)
         c1, c2 = st.columns(2)
@@ -169,13 +153,13 @@ def tela_analise_tcc():
         else:
             barras_ic(comp, "Modelo", ordem=comp.Modelo.tolist(), altura=max(260, 26 * len(comp)))
         st.warning("Leia a **existência e o tamanho** da diferença, não a posição exata. Retirando 2024 ou contando por "
-                   "veículo, a ordem geral se mantém, mas o modelo exato do topo ou do fundo de uma combinação pode trocar "
-                   "(INS-025). Parte da diferença é massa e perfil de uso, que o nome do modelo apenas indica. "
-                   "A geração segue a plataforma do veículo; reestilizações sobre a mesma plataforma contam como a mesma geração (DM-064).", icon="⚠️")
+                   "veículo, a ordem geral se mantém, mas o modelo exato do topo ou do fundo de uma combinação pode trocar. "
+                   "Parte da diferença é massa e perfil de uso, que o nome do modelo apenas indica. "
+                   "A geração segue a plataforma do veículo; reestilizações sobre a mesma plataforma contam como a mesma geração.", icon="⚠️")
         if PLAT.exists():
             with st.expander("Modelos diferentes que compartilham a mesma plataforma"):
                 pl = pd.read_csv(PLAT, sep=";", dtype=str, keep_default_na=False)
-                st.caption("Cada modelo é comparado com seu próprio nome, como é vendido e registrado (DM-069). "
+                st.caption("Cada modelo é comparado com seu próprio nome, como é vendido e registrado. "
                            "Esta tabela mostra, apenas como informação, quais deles foram construídos sobre a mesma "
                            "plataforma, segundo a tabela de gerações validada pelo autor. Nenhum resultado é "
                            "recalculado por plataforma.")
@@ -185,20 +169,18 @@ def tela_analise_tcc():
                        .reset_index().rename(columns={"plataforma": "Plataforma"}))
                 st.dataframe(t, hide_index=True, width="stretch")
                 if (pl.base == "inferencia").any():
-                    st.caption("* Grafias diferentes da mesma plataforma na tabela de gerações, agrupadas pelo "
-                               "assistente; aguardam conferência do autor (Q-81).")
+                    st.caption("* Plataforma atribuída por semelhança de nome na tabela de gerações; "
+                               "agrupamento ainda em conferência.")
         with st.expander("Todos os modelos desta combinação, inclusive abaixo de 300 ocupantes"):
             st.dataframe(d.sort_values("n", ascending=False)[["Modelo", "n", "pct_grave", "ic95_inf", "ic95_sup", "pct_obito", "comparavel"]]
                          .rename(columns={"pct_grave": "% óbito ou grave", "pct_obito": "% óbito",
                                           "comparavel": "n ≥ 300"}), hide_index=True, width="stretch")
 
-    # ------------------------------------------------------------- verificação
     with abas[4]:
         st.markdown("Uma regressão logística confere se as diferenças entre modelos resistem quando se controlam, ao mesmo tempo, "
                     "faixa de fabricação, tipo de colisão, sexo, idade e papel do ocupante, tipo de pista, trecho urbano ou rural e UF. "
                     "Cada valor compara o modelo com o **Gol G5–G8** (o Novo Gol, de 2008 em diante): "
                     "abaixo de 1, menor chance de óbito ou lesão grave; acima de 1, maior.")
-        # DM-071: a leitura vem do a24 (regra de contexto da DM-061 e correcoes para comparacoes multiplas)
         f = ler("logistica_leitura.csv")
         f["Modelo"] = f.unidade.map(rotulo)
         nd, nb, nh = (f.leitura == "difere").sum(), f.bonferroni.sum(), f.benjamini_hochberg.sum()
@@ -221,7 +203,7 @@ def tela_analise_tcc():
         st.caption(f"{nd} de {len(ler('logistica_leitura.csv'))} modelos diferem da referência ao nível de 5%; "
                    f"{nb} resistem à correção de Bonferroni e {nh} à de Benjamini-Hochberg para comparações múltiplas. "
                    "Dois modelos (Palio 1ª geração e 206) só diferem com o controle de pista e trecho e não são "
-                   "contados como diferentes (DM-061, DM-071). Passe o mouse sobre um ponto para ver a leitura.")
+                   "contados como diferentes. Passe o mouse sobre um ponto para ver a leitura.")
         s = ler("sensibilidade_leitura.csv")
         r = s.groupby("sensibilidade").spearman.median()
         st.caption(f"Robustez da ordem entre modelos (correlação de Spearman, mediana entre combinações): "
